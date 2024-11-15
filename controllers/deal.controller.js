@@ -1,0 +1,61 @@
+const Deal = require('../models/deal.model'); // Assuming you have a Deal model defined
+
+exports.getAllDeals = async (req, res) => {
+  try {
+    const deals = await Deal.find();
+    res.json(deals);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}
+
+exports.addNewDeal = async (req, res) => {
+  const deal = new Deal({
+    name: req.body.name,
+    description: req.body.description,
+    price: req.body.price,
+    category: req.body.category,
+    imageUrl: req.body.imageUrl,
+    stock: req.body.stock,
+    startsAt: req.body.startsAt,
+    endsAt: req.body.endsAt,
+  });
+
+  try {
+    const newDeal = await deal.save();
+    res.status(201).json(newDeal);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+}
+
+exports.getDealById = async (req, res) => {
+  try {
+    const deal = await Deal.findById(req.params.id);
+    if (!deal) {
+      return res.status(404).send('Deal not found');
+    }
+    res.json(deal);
+  } catch (error) {
+    console.error('Error fetching deal:', error);
+    res.status(500).send('Server error');
+  }
+};
+
+// exports.catalog = (category) => {
+//     return (req, res) => {
+//       if (category === "new") {
+//         // Logic for "new" deals
+//         res.send("Showing new deals");
+//       } else if (category === "popular") {
+//         // Logic for "popular" deals
+//         res.send("Showing popular deals");
+//       } else if (category === "sale") {
+//         // Logic for deals on sale
+//         res.send("Showing deals on sale");
+//       } else {
+//         res.status(400).send("Invalid category");
+//       }
+//     };
+//   };
+  
