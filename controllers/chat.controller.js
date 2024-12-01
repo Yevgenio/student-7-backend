@@ -10,13 +10,14 @@ exports.getAllChats = async (req, res) => {
 }
 
 exports.addNewChat = async (req, res) => {
+  const imagePath = req.files?.imagePath ? `/${req.files.imagePath[0].filename}` : null;
+
   const chat = new Chat({
     name: req.body.name,
     description: req.body.description,
-    price: req.body.price,
+    link: req.body.link,
     category: req.body.category,
-    imageUrl: req.body.imageUrl,
-    stock: req.body.stock
+    imagePath: imagePath,
   });
 
   try {

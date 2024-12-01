@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const path = require('path');
 
 dotenv.config();
 const app = express();
@@ -36,6 +37,10 @@ app.use('/api/chats', chatRoutes);
 // Product Routes
 const dealRoutes = require('./routes/deal.routes');
 app.use('/api/deals', dealRoutes);
+
+// Image file Routes
+const fileRoutes = require('./routes/file.routes');
+app.use('/api/uploads', fileRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 5000;

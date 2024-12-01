@@ -13,6 +13,8 @@ router.post('/login', authController.login);
 
 router.get('/settings', verifyToken, authController.settings);
 
+router.get('/profile', verifyToken, authController.settings);
+
 // router.get('/is-admin', authController.isAdmin)
 
 module.exports = router;

@@ -1,5 +1,15 @@
 const Deal = require('../models/deal.model'); // Assuming you have a Deal model defined
 
+// const mapRequestToSchema = (reqBody, schemaPaths) => {
+//   const mappedData = {};
+//   Object.keys(schemaPaths).forEach((path) => {
+//     if (reqBody[path] !== undefined) {
+//       mappedData[path] = reqBody[path];
+//     }
+//   });
+//   return mappedData;
+// };
+
 exports.getAllDeals = async (req, res) => {
   try {
     const deals = await Deal.find();
@@ -10,24 +20,29 @@ exports.getAllDeals = async (req, res) => {
 }
 
 exports.addNewDeal = async (req, res) => {
-  const deal = new Deal({
-    name: req.body.name,
-    description: req.body.description,
-    price: req.body.price,
-    category: req.body.category,
-    imageUrl: req.body.imageUrl,
-    stock: req.body.stock,
-    startsAt: req.body.startsAt,
-    endsAt: req.body.endsAt,
-  });
-
   try {
+    // Save the image path if a file was uploaded
+    const imagePath = req.files?.imagePath ? `/${req.files.imagePath[0].filename}` : null;
+    const barcodePath = req.files?.barcodePath ? `/${req.files.barcodePath[0].filename}` : null;
+
+    const deal = new Deal({
+      name: req.body.name,
+      description: req.body.description,
+      price: req.body.price,
+      category: req.body.category,
+      imagePath: imagePath,
+      barcodePath: barcodePath,
+      stock: req.body.stock,
+      startsAt: req.body.startsAt,
+      endsAt: req.body.endsAt,
+    });    
+
     const newDeal = await deal.save();
     res.status(201).json(newDeal);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
-}
+};
 
 exports.getDealById = async (req, res) => {
   try {

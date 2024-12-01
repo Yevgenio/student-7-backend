@@ -3,12 +3,9 @@ const mongoose = require('mongoose');
 const chatSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: String,
-  price: Number, // { type: Number, required: true },
+  link: String,
   category: String,
-  imageUrl: String,
-  stock: Number, //{ type: Number, required: true },
-  startsAt: { type: Date, default: Date.now },
-  endsAt: Date,
+  imagePath: {type: String, default: "default"},
   createdAt: { type: Date, default: Date.now },
 });
 
