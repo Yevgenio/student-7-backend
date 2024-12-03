@@ -9,10 +9,11 @@ const app = express();
 
 
 // Middleware
-app.use(cors({
-  origin: 'http://51.84.9.120', // Frontend domain
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-}));
+app.use(cors());
+//app.use(cors({
+//  origin: 'http://51.84.9.120', // Frontend domain
+//  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//}));
 app.use(express.json());
 
 // MongoDB Connection
