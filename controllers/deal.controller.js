@@ -22,8 +22,8 @@ exports.getAllDeals = async (req, res) => {
 exports.addNewDeal = async (req, res) => {
   try {
     // Save the image path if a file was uploaded
-    const imagePath = req.files?.imagePath ? `/${req.files.imagePath[0].filename}` : null;
-    const barcodePath = req.files?.barcodePath ? `/${req.files.barcodePath[0].filename}` : null;
+    const imagePath = req.files?.imagePath ? req.files.imagePath[0].filename : "default";
+    const barcodePath = req.files?.barcodePath ? req.files.barcodePath[0].filename : "default";
 
     const deal = new Deal({
       name: req.body.name,
