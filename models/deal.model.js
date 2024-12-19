@@ -13,6 +13,13 @@ const dealSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }, 
 });
 
+// // Add a text index to enable full-text search
+// dealSchema.index({ 
+//   name: 'text', 
+//   description: 'text', 
+//   category: 'text' 
+// });
+
 module.exports = mongoose.model('Deal', dealSchema);
 
 // [

@@ -30,6 +30,10 @@ app.use('/api/auth', authRoutes);
 const userRoutes = require('./routes/user.routes');
 app.use('/api/user', userRoutes);
 
+// Search Routes
+const searchRoutes = require('./routes/search.routes');
+app.use('/api/search', searchRoutes);
+
 // Product Routes
 const chatRoutes = require('./routes/chat.routes');
 app.use('/api/chats', chatRoutes);

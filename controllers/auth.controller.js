@@ -24,8 +24,8 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: 'Auth failed' });
     }
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    console.log(token);
-    res.status(200).json({ token });
+    const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    res.status(200).json({ token, refreshToken });    
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
