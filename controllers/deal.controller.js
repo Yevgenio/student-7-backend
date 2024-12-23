@@ -1,5 +1,14 @@
 const Deal = require('../models/deal.model'); // Assuming you have a Deal model defined
 
+exports.getDistinctCategories = async (req, res) => {
+  try {
+    const categories = await Deal.distinct("category");
+    res.json(categories);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
 exports.getAllDeals = async (req, res) => {
   try {
     const deals = await Deal.find();

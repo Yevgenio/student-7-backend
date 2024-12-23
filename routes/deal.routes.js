@@ -16,6 +16,9 @@ router.get('/id/:id', dealController.getDealById);
 // GET deals by query
 router.get('/search', dealController.searchDeals);
 
+// GET distinct categories
+router.get('/categories', dealController.getDistinctCategories);
+
 // POST new deal
 router.post(
     '/', 
