@@ -4,44 +4,62 @@ const Search = require('../models/search.model');
 // const User = require('../models/user.model'); 
 
 exports.globalSearch = async (req, res) => {
-    const { query, limit } = req.query;
-    const searchQuery = {};
-  
-    if (query) {
-      searchQuery.$or = [
-        { name: { $regex: query, $options: 'i' } },
-        { description: { $regex: query, $options: 'i' } },
-        { category: { $regex: query, $options: 'i' } },
-      ];
-    }
-  
-    const searchLimit = parseInt(limit) || 30;
-  
-    try {
-      const [deals, chats] = await Promise.all([
-        Deal.find(searchQuery).limit(searchLimit),
-        Chat.find(searchQuery).limit(searchLimit),
-      ]);
-  
-      res.json({
-        deals,
-        chats,
-      });
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
-  };
-  
-  exports.getSearchLogHistory = async (req, res) => {
-    try {
-      const searches = await Search.find();
-      res.json(searches);
-    } catch (err) {
-      res.status(500).json({ message: err.message });
-    }
+  const { query, limit, page } = req.query;
+  const searchQuery = {};
+
+  // Build search query
+  if (query) {
+    searchQuery.$or = [
+      { name: { $regex: query, $options: 'i' } },
+      { description: { $regex: query, $options: 'i' } },
+      { category: { $regex: query, $options: 'i' } },
+    ];
   }
 
-  exports.getSearchLogById = async (req, res) => {
+  // Set limit and page for pagination
+  const itemsPerPage = parseInt(limit) || 30; // Default 30 items per page
+  const currentPage = parseInt(page) || 1; // Default to page 1
+  const skip = (currentPage - 1) * itemsPerPage;
+
+  try {
+    const [deals, chats, dealsCount, chatsCount] = await Promise.all([
+      // Fetch deals with pagination
+      Deal.find(searchQuery).skip(skip).limit(itemsPerPage),
+      // Fetch chats with pagination
+      Chat.find(searchQuery).skip(skip).limit(itemsPerPage),
+      // Total count for deals
+      Deal.countDocuments(searchQuery),
+      // Total count for chats
+      Chat.countDocuments(searchQuery),
+    ]);
+
+    // Total results across collections
+    const totalResults = dealsCount + chatsCount;
+
+    res.json({
+      deals,
+      chats,
+      pagination: {
+        totalResults,
+        page: currentPage,
+        itemsPerPage,
+      },
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+  
+exports.getSearchLogHistory = async (req, res) => {
+  try {
+    const searches = await Search.find();
+    res.json(searches);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}
+
+exports.getSearchLogById = async (req, res) => {
   try {
     const search = await Chat.findById(req.params.id);
     if (!search) {

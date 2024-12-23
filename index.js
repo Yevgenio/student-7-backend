@@ -18,7 +18,7 @@ mongoose.connect(process.env.MONGO_URI)
     .catch(err => console.log(err));
 
 // Sample Route
-app.get('/', (req, res) => {
+app.get('/api', (req, res) => {
   res.send('Student 7 API');
 });
 
@@ -30,15 +30,19 @@ app.use('/api/auth', authRoutes);
 const userRoutes = require('./routes/user.routes');
 app.use('/api/user', userRoutes);
 
+// Memo Routes
+const memoRoutes = require('./routes/memo.routes');
+app.use('/api/memo', memoRoutes);
+
 // Search Routes
 const searchRoutes = require('./routes/search.routes');
 app.use('/api/search', searchRoutes);
 
-// Product Routes
+// Chat Routes
 const chatRoutes = require('./routes/chat.routes');
 app.use('/api/chats', chatRoutes);
 
-// Product Routes
+// Deal Routes
 const dealRoutes = require('./routes/deal.routes');
 app.use('/api/deals', dealRoutes);
 
