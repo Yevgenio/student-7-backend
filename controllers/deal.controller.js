@@ -43,8 +43,12 @@ exports.searchDeals = async (req, res) => {
         { category: { $regex: query, $options: 'i' } }, // Partial match in category 
       ];
     }
-    if (category) {
-      searchQuery.category = category; // Filter by category
+
+    // Check for empty or null category
+    if (category === '') {
+      searchQuery.category = { $in: [null, ''] };
+    } else if (category) {
+      searchQuery.category = category; // Filter by exact category match
     }
 
     // Define sort options
@@ -54,7 +58,7 @@ exports.searchDeals = async (req, res) => {
     }
 
     // Pagination (defaults to 10 items per page)
-    const itemsPerPage = parseInt(limit) || 10;
+    const itemsPerPage = parseInt(limit) || 100; //need better logic
     const currentPage = parseInt(page) || 1;
     const skip = (currentPage - 1) * itemsPerPage;
 
