@@ -22,6 +22,14 @@ app.get('/api', (req, res) => {
   res.send('Student 7 API');
 });
 
+// Set CORS headers for all routes
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*'); // Allow all origins
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE'); // Allow specific HTTP methods
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow headers
+  next();
+});
+
 // Authentication Routes
 const authRoutes = require('./routes/auth.routes');
 app.use('/api/auth', authRoutes);
