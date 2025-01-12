@@ -49,27 +49,46 @@ router.get('/google/web/callback',
 //router.get('/google/android', passport.authenticate('google-android', { scope: ['profile', 'email'] }));
 
 // Google login for Android
-router.post('/google/android', passport.authenticate('google-android', { session: false }), async (req, res) => {
+router.post('/google/android', async (req, res) => {
     try {
-        // Log the incoming request for debugging
-        console.log('Request Headers:', req.headers);
-        console.log('Request Body:', req.body);
-
-        // Authentication logic (e.g., token validation, user creation)
-        const user = await User.findOne({ email: req.body.email }); // Example logic
-        if (!user) {
-            throw new Error('User not found');
-        }
-
-        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '180d' });
-
-        res.json({ token, refreshToken });
+      console.log('Request received at /google/android:', req.body);
+  
+      const { idToken } = req.body;
+      if (!idToken) {
+        console.error('ID Token is missing');
+        return res.status(400).json({ message: 'ID token is required' });
+      }
+  
+      const ticket = await client.verifyIdToken({
+        idToken,
+        audience: process.env.GOOGLE_ANDROID_CLIENT_ID,
+      });
+  
+      const payload = ticket.getPayload();
+      console.log('Verified payload:', payload);
+  
+      const email = payload.email;
+      let user = await User.findOne({ email });
+  
+      if (!user) {
+        user = new User({
+          username: payload.name,
+          email: payload.email,
+          avatar: payload.picture,
+        });
+        await user.save();
+      }
+  
+      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '180d' });
+  
+      res.json({ token, refreshToken });
     } catch (err) {
-        console.error('Google login failed:', err.message); // Log error for debugging
-        res.status(500).json({ message: 'Google login failed', error: err.message });
+      console.error('Error during Google login:', err);
+      res.status(500).json({ message: 'Google login failed', error: err.message });
     }
 });
+  
 
 
 router.get('/google/android/callback', passport.authenticate('google-android', { session: false }), (req, res) => {
