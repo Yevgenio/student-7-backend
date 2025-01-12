@@ -4,6 +4,10 @@ const router = express.Router();
 // const bcrypt = require('bcrypt');
 const authController = require('../controllers/auth.controller');
 const { verifyToken, verifyAdmin } = require('../middleware/auth.middleware');
+const { OAuth2Client } = require('google-auth-library');
+
+// Initialize the client with your Android client ID
+const client = new OAuth2Client(process.env.GOOGLE_ANDROID_CLIENT_ID);
 
 // const User = require('../models/user.model');
 
