@@ -19,4 +19,22 @@ router.post('/refresh', authController.refreshToken);
 
 // router.get('/is-admin', authController.isAdmin)
 
+// google login route ===========================================================
+const passport = require('passport');
+const jwt = require('jsonwebtoken');
+
+// Google Login Route
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+// Google Callback Route
+router.get('/google/callback', 
+    passport.authenticate('google', { session: false }),
+    (req, res) => {
+        // Generate tokens
+        const token = jwt.sign({ userId: req.user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const refreshToken = jwt.sign({ userId: req.user._id }, process.env.JWT_SECRET, { expiresIn: '180d' }); // 6 months
+        res.json({ token, refreshToken });
+    }
+);
+
 module.exports = router;

@@ -58,6 +58,10 @@ app.use('/api/deals', dealRoutes);
 const fileRoutes = require('./routes/file.routes');
 app.use('/api/uploads', fileRoutes);
 
+const passport = require('passport');
+require('./config/google.strategy'); // Load the Google strategy
+app.use(passport.initialize());
+
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
