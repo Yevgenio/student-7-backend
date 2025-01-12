@@ -4,10 +4,6 @@ const router = express.Router();
 // const bcrypt = require('bcrypt');
 const authController = require('../controllers/auth.controller');
 const { verifyToken, verifyAdmin } = require('../middleware/auth.middleware');
-const { OAuth2Client } = require('google-auth-library');
-
-// Initialize the client with your Android client ID
-const client = new OAuth2Client(process.env.GOOGLE_ANDROID_CLIENT_ID);
 
 // const User = require('../models/user.model');
 
@@ -50,49 +46,46 @@ router.get('/google/web/callback',
     }
 );
 
-//router.get('/google/android', passport.authenticate('google-android', { scope: ['profile', 'email'] }));
+const { OAuth2Client } = require('google-auth-library');
 
-// Google login for Android
+// Use the Web Client ID for verification
+const client = new OAuth2Client(process.env.GOOGLE_WEB_CLIENT_ID);
 router.post('/google/android', async (req, res) => {
-    try {
-      console.log('Request received at /google/android:', req.body);
-  
-      const { idToken } = req.body;
-      if (!idToken) {
-        console.error('ID Token is missing');
-        return res.status(400).json({ message: 'ID token is required' });
-      }
-  
-      const ticket = await client.verifyIdToken({
-        idToken,
-        audience: process.env.GOOGLE_ANDROID_CLIENT_ID,
-      });
-  
-      const payload = ticket.getPayload();
-      console.log('Verified payload:', payload);
-  
-      const email = payload.email;
-      let user = await User.findOne({ email });
-  
-      if (!user) {
-        user = new User({
-          username: payload.name,
-          email: payload.email,
-          avatar: payload.picture,
-        });
-        await user.save();
-      }
-  
-      const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-      const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '180d' });
-  
-      res.json({ token, refreshToken });
-    } catch (err) {
-      console.error('Error during Google login:', err);
-      res.status(500).json({ message: 'Google login failed', error: err.message });
+  try {
+    const { idToken } = req.body;
+
+    if (!idToken) {
+      return res.status(400).json({ message: 'ID token is required' });
     }
+
+    // Verify the ID token using the Web Client ID
+    const ticket = await client.verifyIdToken({
+      idToken,
+      audience: process.env.GOOGLE_WEB_CLIENT_ID, // Web Client ID
+    });
+
+    const payload = ticket.getPayload();
+    const email = payload.email;
+
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = new User({
+        username: payload.name,
+        email: payload.email,
+        avatar: payload.picture,
+      });
+      await user.save();
+    }
+
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '180d' });
+
+    res.json({ token, refreshToken });
+  } catch (err) {
+    console.error('Error during Google login:', err.message);
+    res.status(500).json({ message: 'Google login failed', error: err.message });
+  }
 });
-  
 
 
 router.get('/google/android/callback', passport.authenticate('google-android', { session: false }), (req, res) => {
