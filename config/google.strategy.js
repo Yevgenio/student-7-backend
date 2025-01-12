@@ -5,7 +5,7 @@ const User = require('../models/user.model'); // Adjust the path to your User mo
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID, // From .env
     clientSecret: process.env.GOOGLE_CLIENT_SECRET, // From .env
-    callbackURL: '/api/auth/google/callback', // Must match the redirect URI in Google Cloud Console
+    callbackURL: 'https://student-7.boukingolts.art/api/auth/google/callback', // Must match the redirect URI in Google Cloud Console
 }, async (accessToken, refreshToken, profile, done) => {
     try {
         // Find or create user
