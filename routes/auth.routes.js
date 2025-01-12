@@ -4,6 +4,7 @@ const router = express.Router();
 // const bcrypt = require('bcrypt');
 const authController = require('../controllers/auth.controller');
 const { verifyToken, verifyAdmin } = require('../middleware/auth.middleware');
+const User = require('../models/user.model'); // Adjust the path based on your project structure
 
 // const User = require('../models/user.model');
 
