@@ -7,6 +7,7 @@ const chatSchema = new mongoose.Schema({
   category: String,
   imagePath: {type: String, default: "default"},
   createdAt: { type: Date, default: Date.now },
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },  // User field
 });
 
 // Add a text index to enable full-text search

@@ -18,7 +18,12 @@ router.post(
     '/',
     verifyToken, 
     verifyAdmin, 
-    upload.fields([{ name: 'imagePath', maxCount: 1 }]),
+    upload.fields([
+        { 
+            name: 'imagePath', 
+            maxCount: 1 
+        }
+    ]),
     chatController.addNewChat
 );
 

@@ -11,6 +11,7 @@ const dealSchema = new mongoose.Schema({
   startsAt: { type: Date, default: Date.now }, 
   endsAt: Date, 
   createdAt: { type: Date, default: Date.now }, 
+  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false }, // User field
 });
 
 // // Add a text index to enable full-text search

@@ -76,6 +76,7 @@ exports.addNewChat = async (req, res) => {
     link: req.body.link,
     category: req.body.category,
     imagePath: imagePath,
+    createdBy: req.user._id,
   });
 
   try {

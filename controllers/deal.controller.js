@@ -90,6 +90,9 @@ exports.addNewDeal = async (req, res) => {
     const imagePath = req.files?.imagePath ? req.files.imagePath[0].filename : "default";
     const barcodePath = req.files?.barcodePath ? req.files.barcodePath[0].filename : "default";
 
+
+    console.log(req.body);
+    
     const deal = new Deal({
       name: req.body.name,
       description: req.body.description,
@@ -100,6 +103,7 @@ exports.addNewDeal = async (req, res) => {
       stock: req.body.stock,
       startsAt: req.body.startsAt,
       endsAt: req.body.endsAt,
+      createdBy: req.user._id, // Attach user ID from token
     });    
 
     const newDeal = await deal.save();
