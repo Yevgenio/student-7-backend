@@ -49,12 +49,26 @@ router.get('/google/web/callback',
 //router.get('/google/android', passport.authenticate('google-android', { scope: ['profile', 'email'] }));
 
 // Google login for Android
-router.post('/google/android', passport.authenticate('google-android', { session: false }), (req, res) => {
-    // Generate and return tokens after successful login
-    const token = jwt.sign({ userId: req.user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    const refreshToken = jwt.sign({ userId: req.user._id }, process.env.JWT_SECRET, { expiresIn: '180d' });
+router.post('/google/android', passport.authenticate('google-android', { session: false }), async (req, res) => {
+    try {
+        // Log the incoming request for debugging
+        console.log('Request Headers:', req.headers);
+        console.log('Request Body:', req.body);
 
-    res.json({ token, refreshToken });
+        // Authentication logic (e.g., token validation, user creation)
+        const user = await User.findOne({ email: req.body.email }); // Example logic
+        if (!user) {
+            throw new Error('User not found');
+        }
+
+        const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        const refreshToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: '180d' });
+
+        res.json({ token, refreshToken });
+    } catch (err) {
+        console.error('Google login failed:', err.message); // Log error for debugging
+        res.status(500).json({ message: 'Google login failed', error: err.message });
+    }
 });
 
 
