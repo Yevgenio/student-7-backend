@@ -9,11 +9,9 @@ const clientIDs = {
     },
     android: {
         clientID: process.env.GOOGLE_ANDROID_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_ANDROID_CLIENT_SECRET,
     },
     ios: {
         clientID: process.env.GOOGLE_IOS_CLIENT_ID,
-        clientSecret: process.env.GOOGLE_IOS_CLIENT_SECRET,
     },
 };
 
@@ -60,24 +58,24 @@ passport.use('google-android', new GoogleStrategy({
     }
 }));
 
-passport.use('google-ios', new GoogleStrategy({
-    clientID: clientIDs.ios.clientID,
-    clientSecret: clientIDs.ios.clientSecret,
-    callbackURL: 'https://student-7.boukingolts.art/api/auth/google/ios/callback',
-}, async (accessToken, refreshToken, profile, done) => {
-    try {
-        // Find or create user
-        let user = await User.findOne({ email: profile.emails[0].value });
-        if (!user) {
-            user = new User({
-                username: profile.displayName,
-                email: profile.emails[0].value,
-                avatar: profile.photos[0]?.value,
-            });
-            await user.save();
-        }
-        return done(null, user);
-    } catch (err) {
-        return done(err, null);
-    }
-}));
+// passport.use('google-ios', new GoogleStrategy({
+//     clientID: clientIDs.ios.clientID,
+//     //clientSecret: clientIDs.ios.clientSecret,
+//     callbackURL: 'https://student-7.boukingolts.art/api/auth/google/ios/callback',
+// }, async (accessToken, refreshToken, profile, done) => {
+//     try {
+//         // Find or create user
+//         let user = await User.findOne({ email: profile.emails[0].value });
+//         if (!user) {
+//             user = new User({
+//                 username: profile.displayName,
+//                 email: profile.emails[0].value,
+//                 avatar: profile.photos[0]?.value,
+//             });
+//             await user.save();
+//         }
+//         return done(null, user);
+//     } catch (err) {
+//         return done(err, null);
+//     }
+// }));
