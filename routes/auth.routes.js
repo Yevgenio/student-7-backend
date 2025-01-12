@@ -22,6 +22,6 @@ router.post('/refresh', authController.refreshToken);
 
 // router.get('/is-admin', authController.isAdmin)
 
-router.post('/google-login', authController.googleLogin);
+// router.post('/google-login', authController.googleLogin);
 
 module.exports = router;
