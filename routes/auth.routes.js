@@ -37,4 +37,14 @@ router.get('/google/callback',
     }
 );
 
+router.get('/google/android', passport.authenticate('google-android', { scope: ['profile', 'email'] }));
+router.get('/google/android/callback', passport.authenticate('google-android', { session: false }), (req, res) => {
+    // Handle tokens and login success
+    const token = jwt.sign({ userId: req.user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const refreshToken = jwt.sign({ userId: req.user._id }, process.env.JWT_SECRET, { expiresIn: '180d' });
+
+    res.json({ token, refreshToken });
+});
+
+
 module.exports = router;
