@@ -24,10 +24,19 @@ const passport = require('passport');
 const jwt = require('jsonwebtoken');
 
 // Google Login Route
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+//router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+// Google login for Android
+router.post('/google/web', passport.authenticate('google', { session: false }), (req, res) => {
+    // Generate and return tokens after successful login
+    const token = jwt.sign({ userId: req.user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const refreshToken = jwt.sign({ userId: req.user._id }, process.env.JWT_SECRET, { expiresIn: '180d' });
+
+    res.json({ token, refreshToken });
+});
+
 
 // Google Callback Route
-router.get('/google/callback', 
+router.get('/google/web/callback', 
     passport.authenticate('google', { session: false }),
     (req, res) => {
         // Generate tokens
@@ -37,7 +46,18 @@ router.get('/google/callback',
     }
 );
 
-router.get('/google/android', passport.authenticate('google-android', { scope: ['profile', 'email'] }));
+//router.get('/google/android', passport.authenticate('google-android', { scope: ['profile', 'email'] }));
+
+// Google login for Android
+router.post('/google/android', passport.authenticate('google-android', { session: false }), (req, res) => {
+    // Generate and return tokens after successful login
+    const token = jwt.sign({ userId: req.user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const refreshToken = jwt.sign({ userId: req.user._id }, process.env.JWT_SECRET, { expiresIn: '180d' });
+
+    res.json({ token, refreshToken });
+});
+
+
 router.get('/google/android/callback', passport.authenticate('google-android', { session: false }), (req, res) => {
     // Handle tokens and login success
     const token = jwt.sign({ userId: req.user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
