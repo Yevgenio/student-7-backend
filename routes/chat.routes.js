@@ -27,18 +27,18 @@ router.post(
     chatController.addNewChat
 );
 
-// // PUT update deal by ID
-// router.put('/id/:id', 
-//     verifyToken, 
-//     verifyAdmin, 
-//     chatController.updateDealById);  
+// PUT update deal by ID
+router.put('/id/:id', 
+    verifyToken, 
+    verifyAdmin, 
+    chatController.updateChatById);  
 
-// // DELETE deal by ID
-// router.delete('/id/:id',
-//     verifyToken, 
-//     verifyAdmin, 
-//     chatController.deleteDealById
-// ); 
+// DELETE deal by ID
+router.delete('/id/:id',
+    verifyToken, 
+    verifyAdmin, 
+    chatController.deleteChatById
+); 
 
 // Route definitions with category parameters
 // router.post('/new', chatController.catalog("new"));
