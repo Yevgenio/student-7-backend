@@ -31,6 +31,12 @@ router.post(
 router.put('/id/:id', 
     verifyToken, 
     verifyAdmin, 
+    upload.fields([
+        { 
+            name: 'imagePath', 
+            maxCount: 1 
+        }
+    ]),
     chatController.updateChatById);  
 
 // DELETE deal by ID
