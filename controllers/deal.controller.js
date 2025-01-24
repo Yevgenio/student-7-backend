@@ -96,7 +96,6 @@ exports.addNewDeal = async (req, res) => {
     const deal = new Deal({
       name: req.body.name,
       description: req.body.description,
-      price: req.body.price,
       category: req.body.category,
       imagePath: imagePath,
       barcodePath: barcodePath,

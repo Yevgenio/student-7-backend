@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const dealSchema = new mongoose.Schema({
   name: { type: String, required: true },
   description: String,
-  price: Number, // { type: Number, required: true },
   category: String,
   imagePath: {type: String, default: "default"},
   barcodePath: {type: String, default: "default"},
