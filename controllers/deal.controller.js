@@ -89,9 +89,6 @@ exports.addNewDeal = async (req, res) => {
     // Save the image path if a file was uploaded
     const imagePath = req.files?.imagePath ? req.files.imagePath[0].filename : "default";
     const barcodePath = req.files?.barcodePath ? req.files.barcodePath[0].filename : "default";
-
-    console.log("get body");
-    console.log(req.body);
     
     const deal = new Deal({
       name: req.body.name,
@@ -112,25 +109,30 @@ exports.addNewDeal = async (req, res) => {
   }
 };
 
-// Update a deal by ID
 exports.updateDealById = async (req, res) => {
   try {
+    // Find the existing deal first
+    const existingDeal = await Deal.findById(req.params.id);
+    if (!existingDeal) {
+      return res.status(404).json({ message: 'Deal not found' });
+    }
+
     // Handle uploaded files
-    const imagePath = req.files?.imagePath ? req.files.imagePath[0].filename : null;
-    const barcodePath = req.files?.barcodePath ? req.files.barcodePath[0].filename : null;
+    const imagePath = req.files?.imagePath ? req.files.imagePath[0].filename : existingDeal.imagePath;
+    const barcodePath = req.files?.barcodePath ? req.files.barcodePath[0].filename : existingDeal.barcodePath;
 
     // Prepare the update data
     const updateData = {
-      ...req.body,
-      ...(imagePath && { imagePath }),
-      ...(barcodePath && { barcodePath }),
+      ...existingDeal.toObject(), // Start with the existing data
+      ...req.body, // Overwrite with new data from the request
+      imagePath, // Use new or existing image path
+      barcodePath, // Use new or existing barcode path
     };
 
-    const updatedDeal = await Deal.findByIdAndUpdate(req.params.id, updateData, { new: true });
+    // Ensure we don't accidentally update `_id` or other immutable fields
+    delete updateData._id;
 
-    if (!updatedDeal) {
-      return res.status(404).json({ message: 'Deal not found' });
-    }
+    const updatedDeal = await Deal.findByIdAndUpdate(req.params.id, updateData, { new: true, runValidators: true });
 
     res.json(updatedDeal);
   } catch (err) {

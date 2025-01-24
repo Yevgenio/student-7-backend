@@ -2,13 +2,13 @@ const mongoose = require('mongoose');
 
 const dealSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  description: String,
-  category: String,
+  description: { type: String, default: "" },
+  category: { type: String, default: "כללי" },
   imagePath: {type: String, default: "default"},
   barcodePath: {type: String, default: "default"},
   stock: Number, //{ type: Number, required: true },
   startsAt: { type: Date, default: Date.now }, 
-  endsAt: Date, 
+  endsAt: { type: Date, default: null }, 
   createdAt: { type: Date, default: Date.now }, 
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false }, // User field
 });
