@@ -87,8 +87,8 @@ exports.searchDeals = async (req, res) => {
 exports.addNewDeal = async (req, res) => {
   try {
     // Save the image path if a file was uploaded
-    const imagePath = req.files?.imagePath ? req.files.imagePath[0].filename : "default";
-    const barcodePath = req.files?.barcodePath ? req.files.barcodePath[0].filename : "default";
+    const imagePath = req.files?.imagePath ? req.files.imagePath[0].filename.split('/').pop() : 'default.jpg';
+    const barcodePath = req.files?.barcodePath ? req.files.barcodePath[0].filename.split('/').pop() : "default.jpg";
     
     const deal = new Deal({
       name: req.body.name,
@@ -118,8 +118,8 @@ exports.updateDealById = async (req, res) => {
     }
 
     // Handle uploaded files
-    const imagePath = req.files?.imagePath ? req.files.imagePath[0].filename : existingDeal.imagePath;
-    const barcodePath = req.files?.barcodePath ? req.files.barcodePath[0].filename : existingDeal.barcodePath;
+    const imagePath = req.files?.imagePath ? req.files.imagePath[0].filename.split('/').pop() : existingDeal.imagePath.split('/').pop();
+    const barcodePath = req.files?.barcodePath ? req.files.barcodePath[0].filename.split('/').pop() : existingDeal.barcodePath.split('/').pop();
 
     // Prepare the update data
     const updateData = {
