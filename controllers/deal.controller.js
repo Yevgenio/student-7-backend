@@ -119,8 +119,23 @@ exports.addNewDeal = async (req, res) => {
 // Update a deal by ID
 exports.updateDealById = async (req, res) => {
   try {
-    const updatedDeal = await Deal.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!updatedDeal) return res.status(404).json({ message: 'Deal not found' });
+    // Handle uploaded files
+    const imagePath = req.files?.imagePath ? req.files.imagePath[0].filename : null;
+    const barcodePath = req.files?.barcodePath ? req.files.barcodePath[0].filename : null;
+
+    // Prepare the update data
+    const updateData = {
+      ...req.body,
+      ...(imagePath && { imagePath }),
+      ...(barcodePath && { barcodePath }),
+    };
+
+    const updatedDeal = await Deal.findByIdAndUpdate(req.params.id, updateData, { new: true });
+
+    if (!updatedDeal) {
+      return res.status(404).json({ message: 'Deal not found' });
+    }
+
     res.json(updatedDeal);
   } catch (err) {
     res.status(400).json({ message: err.message });

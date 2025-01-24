@@ -35,25 +35,24 @@ router.post(
     dealController.addNewDeal
 );
 
-// // PUT update deal by ID
-// router.put('/id/:id',
-//     verifyToken, 
-//     verifyAdmin, 
-//     upload.fields([{ name: 'imagePath', maxCount: 1 }, { name: 'barcodePath', maxCount: 1 }]),
-//     dealController.updateDealById
-// );
+// PUT update deal by ID
+router.put(
+    '/id/:id',
+    verifyToken,
+    verifyAdmin,
+    upload.fields([
+      { name: 'imagePath', maxCount: 1 },
+      { name: 'barcodePath', maxCount: 1 },
+    ]),
+    dealController.updateDealById
+  );
 
-// // DELETE deal by ID
-// router.delete('/id/:id', 
-//     verifyToken, 
-//     verifyAdmin, 
-//     dealController.deleteDealById
-// );
-// router.post('/', verifyToken, verifyAdmin, upload.single('image'), dealController.addNewDeal);
-
-// Route definitions with category parameters
-// router.post('/new', dealController.catalog("new"));
-// router.post('/popular', dealController.catalog("popular"));
-// router.post('/sale', dealController.catalog("sale"));
-
+// DELETE deal by ID
+router.delete(
+    '/id/:id',
+    verifyToken,
+    verifyAdmin,
+    dealController.deleteDealById
+  );
+  
 module.exports = router;
