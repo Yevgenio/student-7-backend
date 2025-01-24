@@ -68,7 +68,7 @@ exports.searchChats =  async (req, res) => {
 }
 
 exports.addNewChat = async (req, res) => {
-  const imagePath = req.files?.imagePath ? `/${req.files.imagePath[0].filename}` : null;
+  const imagePath = req.files?.imagePath ? `${req.files.imagePath[0].filename}` : null;
 
   const chat = new Chat({
     name: req.body.name,
@@ -90,7 +90,13 @@ exports.addNewChat = async (req, res) => {
 // Update a chat by ID
 exports.updateChatById = async (req, res) => {
   try {
-    const updatedChat = await Chat.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const imagePath = req.files?.imagePath ? `${req.files.imagePath[0].filename}` : null;
+    const updateData = {
+      ...req.body,
+      ...(imagePath && { imagePath }),
+    };
+
+    const updatedChat = await Chat.findByIdAndUpdate(req.params.id, updateData, { new: true });
     if (!updatedChat) return res.status(404).json({ message: 'Chat not found' });
     res.json(updatedChat);
   } catch (err) {
