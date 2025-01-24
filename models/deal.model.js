@@ -6,7 +6,7 @@ const dealSchema = new mongoose.Schema({
   category: { type: String, default: "כללי" },
   imagePath: {type: String, default: "default"},
   barcodePath: {type: String, default: "default"},
-  stock: Number, //{ type: Number, required: true },
+  stock: { type: Number, default: -1 },
   startsAt: { type: Date, default: Date.now }, 
   endsAt: { type: Date, default: null }, 
   createdAt: { type: Date, default: Date.now }, 

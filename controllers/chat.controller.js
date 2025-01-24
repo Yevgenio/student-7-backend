@@ -87,17 +87,29 @@ exports.addNewChat = async (req, res) => {
   }
 }
 
-// Update a chat by ID
 exports.updateChatById = async (req, res) => {
   try {
-    const imagePath = req.files?.imagePath ? `${req.files.imagePath[0].filename}` : null;
+    // Find the existing chat first
+    const existingChat = await Chat.findById(req.params.id);
+    if (!existingChat) {
+      return res.status(404).json({ message: 'Chat not found' });
+    }
+
+    // Handle uploaded files
+    const imagePath = req.files?.imagePath ? req.files.imagePath[0].filename : existingChat.imagePath;
+
+    // Prepare the update data
     const updateData = {
-      ...req.body,
-      ...(imagePath && { imagePath }),
+      ...existingChat.toObject(), // Start with the existing data
+      ...req.body, // Overwrite with new data from the request
+      imagePath, // Use new or existing image path
     };
 
-    const updatedChat = await Chat.findByIdAndUpdate(req.params.id, updateData, { new: true });
-    if (!updatedChat) return res.status(404).json({ message: 'Chat not found' });
+    // Ensure we don't accidentally update `_id` or other immutable fields
+    delete updateData._id;
+
+    const updatedChat = await Chat.findByIdAndUpdate(req.params.id, updateData, { new: true, runValidators: true });
+
     res.json(updatedChat);
   } catch (err) {
     res.status(400).json({ message: err.message });
