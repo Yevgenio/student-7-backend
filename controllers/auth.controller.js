@@ -24,6 +24,8 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: 'User authentication failed' });
     }
 
+    const username = user.username;
+
     // Access token (1-hour expiration)
     const token = jwt.sign(
       { userId: user._id }, 
@@ -38,7 +40,7 @@ exports.login = async (req, res) => {
       { expiresIn: '180d' } // 6 months
     );
 
-    res.status(200).json({ token, refreshToken });    
+    res.status(200).json({ username, token, refreshToken });    
   } catch (err) {
     res.status(500).json({ message: 'Internal server error', error: err.message });
   }
@@ -82,24 +84,26 @@ exports.refreshToken = async (req, res) => {
 
       // Verify the refresh token
       jwt.verify(refreshToken, process.env.JWT_SECRET, async (err, decoded) => {
-          if (err) {
-              return res.status(403).json({ message: 'Invalid refresh token' });
-          }
+        if (err) {
+            return res.status(403).json({ message: 'Invalid refresh token' });
+        }
 
-          // Check if user exists
-          const user = await User.findById(decoded.userId);
-          if (!user) {
-              return res.status(404).json({ message: 'User not found' });
-          }
+        // Check if user exists
+        const user = await User.findById(decoded.userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
 
-          // Generate a new access token
-          const newAccessToken = jwt.sign(
-              { userId: user._id },
-              process.env.JWT_SECRET,
-              { expiresIn: '1h' }
-          );
+        const username = user.username;
 
-          res.status(200).json({ token: newAccessToken });
+        // Generate a new access token
+        const newAccessToken = jwt.sign(
+            { userId: user._id },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' }
+        );
+
+        res.status(200).json({username: username, token: newAccessToken });
       });
   } catch (err) {
       res.status(500).json({ message: 'Internal server error', error: err.message });

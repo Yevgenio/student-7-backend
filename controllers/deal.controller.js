@@ -88,8 +88,8 @@ exports.addNewDeal = async (req, res) => {
   try {
     // Save the image path if a file was uploaded
     const imagePath = req.files?.imagePath ? req.files.imagePath[0].filename.split('/').pop() : 'default.jpg';
-    const barcodePath = req.files?.barcodePath ? req.files.barcodePath[0].filename.split('/').pop() : "default.jpg";
-    
+    const barcodePath = req.files?.barcodePath ? req.files.barcodePath[0].filename.split('/').pop() : 'default.jpg';
+
     const deal = new Deal({
       name: req.body.name,
       description: req.body.description,
