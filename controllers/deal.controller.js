@@ -106,9 +106,6 @@ exports.addNewDeal = async (req, res) => {
       createdBy: req.user._id, // Attach user ID from token
     });    
 
-    console.log("get deal");
-    console.log(deal);
-
     const newDeal = await deal.save();
     res.status(201).json(newDeal);
   } catch (err) {
