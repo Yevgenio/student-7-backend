@@ -68,7 +68,7 @@ exports.searchChats =  async (req, res) => {
 }
 
 exports.addNewChat = async (req, res) => {
-  const imagePath = req.files?.imagePath ? `${req.files.imagePath[0].filename}` : null;
+  const imagePath = req.files?.imagePath ? req.files.imagePath[0].filename.split('/').pop() : null;
 
   const chat = new Chat({
     name: req.body.name,
@@ -96,7 +96,7 @@ exports.updateChatById = async (req, res) => {
     }
 
     // Handle uploaded files
-    const imagePath = req.files?.imagePath ? req.files.imagePath[0].filename : existingChat.imagePath;
+    const imagePath = req.files?.imagePath ? req.files.imagePath[0].filename.split('/').pop() : existingChat.imagePath.split('/').pop();
 
     // Prepare the update data
     const updateData = {
