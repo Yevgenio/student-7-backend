@@ -68,7 +68,7 @@ exports.searchChats =  async (req, res) => {
 }
 
 exports.addNewChat = async (req, res) => {
-  const imagePath = req.files?.imagePath ? req.files.imagePath[0].filename.split('/').pop() : null;
+  const imagePath = req.files?.imagePath ? req.files.imagePath[0].filename.split('/').pop() : 'default.jpg';
 
   const chat = new Chat({
     name: req.body.name,

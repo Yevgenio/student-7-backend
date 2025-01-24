@@ -5,7 +5,7 @@ const chatSchema = new mongoose.Schema({
   description: String,
   link: String,
   category: String,
-  imagePath: {type: String, default: "default"},
+  imagePath: { type: String, default: "default"},
   createdAt: { type: Date, default: Date.now },
   createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: false },  // User field
 });
