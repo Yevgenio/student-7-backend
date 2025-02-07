@@ -6,11 +6,16 @@ const logRequest = async (req, res, next) => {
     res.on('finish', async () => {  // Log only after response is sent
         const duration = Date.now() - startTime;
 
+        const ip = req.headers['x-forwarded-for']
+        ? req.headers['x-forwarded-for'].split(',')[0].trim()
+        : req.socket.remoteAddress;
+
+
         const logData = {
             timestamp: new Date(),
             method: req.method,
             url: req.originalUrl,  // The page or API endpoint the user accessed
-            ip: req.headers['x-forwarded-for'] || req.connection.remoteAddress, 
+            ip: ip, 
             user: req.user ? req.user._id : null,  // Store user ID if logged in
             status: res.statusCode,
             responseTime: `${duration}ms`
