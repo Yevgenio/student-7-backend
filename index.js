@@ -52,14 +52,6 @@ app.use('/api/auth', authRoutes);
 const userRoutes = require('./routes/user.routes');
 app.use('/api/user', userRoutes);
 
-// Memo Routes
-const memoRoutes = require('./routes/memo.routes');
-app.use('/api/memo', memoRoutes);
-
-// Search Routes
-const searchRoutes = require('./routes/search.routes');
-app.use('/api/search', searchRoutes);
-
 // Chat Routes
 const chatRoutes = require('./routes/chat.routes');
 app.use('/api/chats', chatRoutes);
@@ -67,6 +59,14 @@ app.use('/api/chats', chatRoutes);
 // Deal Routes
 const dealRoutes = require('./routes/deal.routes');
 app.use('/api/deals', dealRoutes);
+
+// Memo Routes
+const memoRoutes = require('./routes/memo.routes');
+app.use('/api/memos', memoRoutes);
+
+// Search Routes
+const searchRoutes = require('./routes/search.routes');
+app.use('/api/search', searchRoutes);
 
 // Image file Routes
 const fileRoutes = require('./routes/file.routes');

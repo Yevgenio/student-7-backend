@@ -96,18 +96,18 @@ exports.addNewMemo = async (req, res) => {
   try {
     // Save the image path if a file was uploaded
     const imagePath = req.files?.imagePath ? req.files.imagePath[0].filename : "default";
-    const barcodePath = req.files?.barcodePath ? req.files.barcodePath[0].filename : "default";
-
+    
     const memo = new Memo({
       name: req.body.name,
       description: req.body.description,
-      price: req.body.price,
-      category: req.body.category,
-      type: req.body.type,
+      type: req.body.type, // 'deal', 'chat', 'external', 'blog'
+      targetId: req.body.targetId || null, // ID of chat/deal
+      externalLink: req.body.externalLink || null, // Direct external link
+      immediateRedirect: req.body.immediateRedirect || false, // Immediate redirect or landing page
       imagePath: imagePath,
       startsAt: req.body.startsAt,
       endsAt: req.body.endsAt,
-    });    
+    });
 
     const newMemo = await memo.save();
     res.status(201).json(newMemo);

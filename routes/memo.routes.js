@@ -22,9 +22,9 @@ router.get('/search', memoController.searchMemos);
 // POST new memo
 router.post(
     '/', 
-    verifyToken, 
-    verifyAdmin, 
-    upload.fields([{ name: 'imagePath', maxCount: 1 }, { name: 'barcodePath', maxCount: 1 }]),
+    // verifyToken, 
+    // verifyAdmin, 
+    upload.fields([{ name: 'imagePath', maxCount: 1 }]), 
     memoController.addNewMemo
 );
 
