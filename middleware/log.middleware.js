@@ -9,7 +9,9 @@ const logRequest = async (req, res, next) => {
         const ip = req.headers['x-forwarded-for']
         ? req.headers['x-forwarded-for'].split(',')[0].trim()
         : req.socket.remoteAddress;
-
+        ip = ip.replace(/^::ffff:/, '');
+        
+        console.log("Request Headers:", req.headers);
 
         const logData = {
             timestamp: new Date(),
