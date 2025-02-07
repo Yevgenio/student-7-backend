@@ -12,12 +12,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// // Apply logging middleware
+// Apply logging middleware
 // app.set('trust proxy', true); // Trust AWS proxy to get real IP address
 
 //const { verifyToken } = require('./middleware/auth.middleware');
 // app.use(verifyToken); // Ensure the user is authenticated first
 
+const logRequest = require('./middleware/log.middleware');
+app.use(logRequest); 
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
@@ -73,9 +75,6 @@ app.use('/api/uploads', fileRoutes);
 const passport = require('passport');
 require('./config/google.strategy'); // Load the Google strategy
 app.use(passport.initialize());
-
-const logRequest = require('./middleware/log.middleware');
-app.use(logRequest); 
 
 // Start the server
 const PORT = process.env.PORT || 5000;
