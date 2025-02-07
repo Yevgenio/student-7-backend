@@ -12,14 +12,21 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Apply logging middleware
+app.set('trust proxy', true); // Trust AWS proxy to get real IP address
+
+const { verifyToken } = require('./middleware/auth.middleware');
+app.use(verifyToken); // Ensure the user is authenticated first
+
+const logRequest = require('./middleware/log.middleware');
+app.use(logRequest); 
+
+
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));
 
-// Apply logging middleware
-const logRequest = require('./middleware/log.middleware');
-app.use(logRequest); 
 
 // Root Route
 app.get('/api', (req, res) => {
