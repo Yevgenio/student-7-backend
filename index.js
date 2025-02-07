@@ -17,7 +17,11 @@ mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));
 
-// Sample Route
+// Apply logging middleware
+const logRequest = require('./middleware/log.middleware');
+app.use(logRequest); 
+
+// Root Route
 app.get('/api', (req, res) => {
   res.send('Student 7 API');
 });
@@ -29,6 +33,10 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization'); // Allow headers
   next();
 });
+
+// Log Routes
+const logRoutes = require('./routes/log.routes');
+app.use('/api/logs', logRoutes);
 
 // Authentication Routes
 const authRoutes = require('./routes/auth.routes');
