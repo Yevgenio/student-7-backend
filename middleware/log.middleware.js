@@ -6,11 +6,11 @@ const logRequest = async (req, res, next) => {
     res.on('finish', async () => {  // Log only after response is sent
         const duration = Date.now() - startTime;
 
-        const ip = req.headers['x-forwarded-for']
+        let ip = req.headers['x-forwarded-for']
         ? req.headers['x-forwarded-for'].split(',')[0].trim()
         : req.socket.remoteAddress;
         ip = ip.replace(/^::ffff:/, '');
-        
+
         console.log("Request Headers:", req.headers);
 
         const logData = {
