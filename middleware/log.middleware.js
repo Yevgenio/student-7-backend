@@ -12,6 +12,7 @@ const logRequest = async (req, res, next) => {
         ip = ip.replace(/^::ffff:/, '');
 
         console.log("Request Headers:", req.headers);
+        console.log("Remote Address:", req.socket.remoteAddress);
 
         const logData = {
             timestamp: new Date(),
